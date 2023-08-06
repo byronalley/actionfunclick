@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>ActionFunClick!!!</title>
+
+		<style type="text/css" media="screen">
+			div.thing {
+				border: 1px solid #eee;
+				height: 5vh;
+				width: 7.5vw;
+				padding: 0.7vw;
+				background-color: #dddddd;
+				transition: margin 700ms ease-in-out;
+			}
+		</style>
+
+		<script charset="utf-8">
+			const winningScore = 100;
+			const things = [];
+			loopTimer = 100;
+			winRate = 2.3;
+			moveRate = 1.3;
+			loserLineVw = 92;
+
+			const updateScore = (delta) => {
+				score = document.querySelector("#score");
+				return score.innerText = Math.min(winningScore, delta + Number.parseInt(score.innerText));
+			};
+
+			const wobble = (n) => {
+				r = Math.random() - 0.2;
+				result = r > 0.3 ? n * r : 0;
+
+				return Math.round(result);
+			};
+
+			const depress = (n) => () => updateScore(wobble(n));
+
+			const loseFaster = (e, n) => {
+				return () => {
+					moveBy(e, n);
+					updateScore(wobble(n));
+				};
+			}
+
+			const loop = () => {
+				newScore = updateScore(wobble(winRate));
+
+				things.forEach(move);
+
+				if (newScore >= winningScore) {
+						win();
+					} else if (hasLost()) {
+						lose();
+					} else {
+						setTimeout(loop, loopTimer);
+					}
+			};
+
+			const hasLost = () => {
+				return things
+				  .map(t => Number.parseInt(t.style["margin-left"]))
+					.some(n => n >= loserLineVw);
+			};
+
+			const move = (thing) => moveBy(thing, wobble(moveRate));
+
+			const moveBy = (thing, n) => {
+				margin = n + Number.parseInt(thing.style["margin-left"]) + "vw";
+
+				thing.style["margin-left"] = margin;
+			}
+
+			const win = () => end("win");
+			const lose = () => end("lose");
+
+			const end = (message) => {
+				document.onmousemove = null;
+				document.onclick = null;
+				document.querySelector("h1").innerHTML = `YOU ${message.toUpperCase()}!`;
+				document.querySelector("h1").classList = [message];
+			};
+
+			const setup = () => {
+				document.onmousemove = depress(-1);
+				document.onclick = depress(-25);
+
+				[...document.querySelectorAll(".thing")].forEach((thing) => {
+					thing.style["margin"] = "1vh 1vw 1vh 1vw";
+					thing.onclick = loseFaster(thing, 17);
+					things.push(thing)
+				});
+
+				setTimeout(loop, loopTimer);
+			};
+		</script>
+	</head>
+	<body onload="setup();" style="font-family: Comic,Helvetica,Arial">
+		<div style="display: flex; flex-direction: row; justify-content: space-around">
+			<h1 style="background-color: pink; padding: 1em; border: 3px dotted green">Click to win!</h1>
+			<div>
+				<h2 style="font-family: monospace; font-size: 1.5vw">WASD keys to move</h2>
+				<h2 style="font-family: monospace; font-size: 1.5vw">Score: <span id="score">0</span></h2>
+			</div>
+		</div>
+		<div id="gamearea" style="width: 100%; height: 75vh; background-color: #aaccaa; padding: 1vh; margin: 0;" >
+			<div class="thing" id="thing1" z-index="1"> Click me! </div>
+			<div class="thing" id="thing2" z-index="2"> Click me! </div>
+			<div class="thing" id="thing3" z-index="3"> Click me! </div>
+			<div class="thing" id="thing4" z-index="4"> Click me! </div>
+			<div class="thing" id="thing5" z-index="5"> Click me! </div>
+			<div class="thing" id="thing6" z-index="6"> Click me! </div>
+			<div class="thing" id="thing7" z-index="7"> Click me! </div>
+			<div class="thing" id="thing8" z-index="8"> Click me! </div>
+		</div>
+	</body>
+</html>
