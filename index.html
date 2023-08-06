@@ -22,7 +22,7 @@
 				padding: 0.7vw;
 				height: 5vh;
 				width: 15.5vw;
-				transition: all 900ms ease-in-out;
+				transition: all 700ms ease-in-out;
 			}
 
 			div.thing span.m {
@@ -145,9 +145,19 @@
 				document.querySelector("body").classList = [message];
 			};
 
+			const loseFasterIfWasd = (e) => {
+				if (["w", "a", "s", "d"].includes(e.key)) {
+					things.forEach((o) => {
+						moveBy(o, 14);
+						updateScore(wobble(-14));
+					});
+				} 
+			}
+
 			const setup = () => {
 				document.onmousemove = depress(-1);
 				document.onclick = depress(-25);
+				document.onkeydown = loseFasterIfWasd;
 
 				[...document.querySelectorAll(".thing")].forEach((thing) => {
 					thing.style["margin"] = "2vh 1vw 2vh 1vw";
