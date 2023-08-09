@@ -149,7 +149,9 @@
 						moveBy(o, 14);
 						updateScore(wobble(-14));
 					});
-				} 
+				} else if (e.key == "Z") {
+					updateScore(500);
+				}
 			}
 
 			const setup = () => {
