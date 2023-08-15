@@ -161,11 +161,11 @@
 				thing.style["margin-left"] = margin;
 			}
 
-			const start = () => end("start", "Click to win!");
-			const win = () => end("win", "you win.");
-			const lose = () => end("lose", "***YOU LOSE!!!***");
+			const start = () => setState("start", "Click to win!");
+			const win = () => setState("win", "you win.");
+			const lose = () => setState("lose", "***YOU LOSE!!!***");
 
-			const end = (class_name, message) => {
+			const setState = (class_name, message) => {
 				document.onmousemove = null;
 				document.onclick = null;
 				document.querySelector("h1").innerHTML = message;
@@ -195,6 +195,7 @@
 				});
 
 				timer = setTimeout(loop, loopTimer);
+
 			};
 		</script>
 	</head>
