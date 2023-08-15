@@ -165,11 +165,11 @@
 			const win = () => setState("win", "you win.");
 			const lose = () => setState("lose", "***YOU LOSE!!!***");
 
-			const setState = (class_name, message) => {
+			const setState = (className, message) => {
 				document.onmousemove = null;
 				document.onclick = null;
 				document.querySelector("h1").innerHTML = message;
-				document.querySelector("body").classList = [class_name];
+				document.querySelector("body").classList = [className];
 			};
 
 			const loseFasterIfWasd = (e) => {
