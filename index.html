@@ -1,224 +1,292 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>ActionFunClick!!!</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ActionFunClick!!!</title>
 
-		<style type="text/css" media="screen">
-			body {
-				background-color: #9999aa;
-				font-family: Helvetica, Arial;
-			}
+    <style type="text/css" media="screen">
+      body {
+        background-color: #9999aa;
+        font-family: Helvetica, Arial;
+      }
 
-			div.gamearea {
-			 width: 100%;
-			 height: 75vh;
-			 background-color: #aaccaa;
-			 padding: 1vh;
-			 margin: 0;
-			}
+      div.gamearea {
+        width: 100%;
+        height: 75vh;
+        background-color: #aaccaa;
+        padding: 1vh;
+        margin: 0;
+      }
 
-			div.start-button {
-				padding: 1.5vw;
-			}
+      div.start-button {
+        padding: 1.5vw;
+      }
 
-			button {
-				height: 100%;
-				width: 10vw;
-				font-size: 1.5vw;
-				font-weight: 700;
-				background-color: #aabfaa;
-			}
+      button {
+        height: 100%;
+        width: 10vw;
+        font-size: 1.5vw;
+        font-weight: 700;
+        background-color: #aabfaa;
+      }
 
-			div.thing {
-				padding: 0.7vw;
-				height: 5vh;
-				width: 15.5vw;
-				transition: all 700ms ease-in-out;
-			}
+      div.thing {
+        padding: 0.7vw;
+        height: 5vh;
+        width: 15.5vw;
+        transition: all 700ms ease-in-out;
+      }
 
-			div.thing span.m {
-				border: 1px solid #eee;
-				background-color: #dddddd;
-				border-radius: 1vh;
-				padding: 0.3vh;
-				position: relative;
-				bottom: 2vh;
-			}
+      div.thing span.m {
+        border: 1px solid #eee;
+        background-color: #dddddd;
+        border-radius: 1vh;
+        padding: 0.3vh;
+        position: relative;
+        bottom: 2vh;
+      }
 
-			div.thing span.u {
-				display: inline-block;
-				transform: scaleX(-1);
-				font-size: 4vw;
-				color: grey;
-			}
+      div.thing span.u {
+        display: inline-block;
+        transform: scaleX(-1);
+        font-size: 4vw;
+        color: grey;
+      }
 
-			h1 {
-				padding: 1em;
-			}
+      h1 {
+        padding: 1em;
+      }
 
-			body.start h1 {
-				background-color: #ccaa99;
-				border: 3px dotted #336699;
-			}
+      body.start h1 {
+        background-color: #ccaa99;
+        border: 3px dotted #336699;
+      }
 
-			body.win h1 {
-				color: #eee;
-				background-color: #999;
-			}
+      body.win h1 {
+        color: #eee;
+        background-color: #999;
+      }
 
-			body.lose {
-				color: red;
-				background-color: #cc9999;
-			}
+      body.lose {
+        color: red;
+        background-color: #cc9999;
+      }
 
-			body.lose h1 {
-				color: red;
-				background-color: pink;
-			}
+      body.lose h1 {
+        color: red;
+        background-color: pink;
+      }
 
-			body.lose .thing {
-				color: red;
-				opacity: 0.11;
-				background-color: red;
-				font-size: 0;
-				width: 0;
-				height: 0;
-				margin: 0;
-				transition: all 1300ms ease-in-out;
-			}
+      body.lose .thing {
+        color: red;
+        opacity: 0.11;
+        background-color: red;
+        font-size: 0;
+        width: 0;
+        height: 0;
+        margin: 0;
+        transition: all 1300ms ease-in-out;
+      }
 
-			body.lose .thing span.u {
-				transform: rotate(180deg);
-				transition: all 1300ms ease-in-out;
-			}
+      body.lose .thing span.u {
+        transform: rotate(180deg);
+        transition: all 1300ms ease-in-out;
+      }
 
-			body.win .thing span {
-				color: #ccc;
-				background-color: transparent;
-				opacity: 0.22;
-				background-color: #ccc;
-				text-shadow: 0 0 #999;
-			}
+      body.win .thing span {
+        color: #ccc;
+        background-color: transparent;
+        opacity: 0.22;
+        background-color: #ccc;
+        text-shadow: 0 0 #999;
+      }
+    </style>
 
-		</style>
+    <script charset="utf-8">
+      const winningScore = 100;
+      const things = [];
+      loopTimer = 100;
+      winRate = 0.9;
+      moveRate = 0.8;
+      loserLineVw = 92;
 
-		<script charset="utf-8">
-			const winningScore = 100;
-			const things = [];
-			loopTimer = 100;
-			winRate = 0.9;
-			moveRate = 0.8;
-			loserLineVw = 92;
+      const updateScore = (delta) => {
+        score = document.querySelector("#score");
+        return (score.innerText = Math.min(
+          winningScore,
+          delta + Number.parseInt(score.innerText),
+        ));
+      };
 
-			const updateScore = (delta) => {
-				score = document.querySelector("#score");
-				return score.innerText = Math.min(winningScore, delta + Number.parseInt(score.innerText));
-			};
+      const resetScore = () => {
+        document.querySelector("#score").innerText = 0;
+      };
 
-			const wobble = (n) => {
-				r = Math.random() - 0.2;
-				result = r > 0.3 ? n * r : 0;
+      const wobble = (n) => {
+        r = Math.random() - 0.2;
+        result = r > 0.3 ? n * r : 0;
 
-				return Math.round(result);
-			};
+        return Math.round(result);
+      };
 
-			const depress = (n) => () => updateScore(wobble(n));
+      const depress = (n) => () => {
+        updateScore(wobble(n));
+      };
 
-			const loseFaster = (e, n) => {
-				return () => {
-					moveBy(e, n);
-					updateScore(wobble(n));
-				};
-			}
+      const loseFaster = (e, n) => {
+        return () => {
+          moveBy(e, n);
+          updateScore(wobble(-n));
+        };
+      };
 
-			const loop = () => {
-				newScore = updateScore(wobble(winRate));
+      const loop = () => {
+        newScore = updateScore(wobble(winRate));
 
-				things.forEach(move);
+        things.forEach(move);
 
-				if (newScore >= winningScore) {
-						win();
-					} else if (hasLost()) {
-						lose();
-					} else {
-						setTimeout(loop, loopTimer);
-					}
-			};
+        if (newScore >= winningScore) {
+          win();
+        } else if (hasLost()) {
+          lose();
+        } else {
+          timer = setTimeout(loop, loopTimer);
+          setRestartButton(timer);
+        }
+      };
 
-			const hasLost = () => {
-				return things
-				  .map(t => Number.parseInt(t.style["margin-left"]))
-					.some(n => n >= loserLineVw);
-			};
+      const hasLost = () => {
+        return things
+          .map((t) => Number.parseInt(t.style["margin-left"]))
+          .some((n) => n >= loserLineVw);
+      };
 
-			const move = (thing) => moveBy(thing, wobble(moveRate));
+      const move = (thing) => moveBy(thing, wobble(moveRate));
 
-			const moveBy = (thing, n) => {
-				margin = n + Number.parseInt(thing.style["margin-left"]) + "vw";
+      const moveBy = (thing, n) => {
+        Number.parseInt(thing.style["margin-left"]) + "vw";
+        const margin =
+          Math.max(0, n + Number.parseInt(thing.style["margin-left"])) + "vw";
 
-				thing.style["margin-left"] = margin;
-			}
+        thing.style["margin-left"] = margin;
+      };
 
-			const start = () => setState("start", "Click to win!");
-			const win = () => setState("win", "you win.");
-			const lose = () => setState("lose", "***YOU LOSE!!!***");
+      const start = () => {
+        document.onmousemove = depress(-1);
+        document.onclick = depress(-25);
+        document.onkeydown = loseFasterIfWasd;
 
-			const setState = (className, message) => {
-				document.onmousemove = null;
-				document.onclick = null;
-				document.querySelector("h1").innerHTML = message;
-				document.querySelector("body").classList = [className];
-			};
+        things.forEach((thing, i) => {
+          thing.onclick = loseFaster(thing, 17);
+        });
+        loop();
+      };
+      const win = () => setState("win", "you win.");
+      const lose = () => setState("lose", "***YOU LOSE!!!***");
 
-			const loseFasterIfWasd = (e) => {
-				if (["w", "a", "s", "d"].includes(e.key)) {
-					things.forEach((o) => {
-						moveBy(o, 14);
-						updateScore(wobble(-14));
-					});
-				} else if (e.key == "Z") {
-					updateScore(500);
-				}
-			}
+      const setState = (className, message) => {
+        document.querySelector("h1").innerHTML = message;
+        document.querySelector("body").classList = [className];
+      };
 
-			const setup = () => {
-				document.onmousemove = depress(-1);
-				document.onclick = depress(-25);
-				document.onkeydown = loseFasterIfWasd;
+      const setRestartButton = (timer) => {
+        button = document.querySelector("button");
+        button.innerText = "Restart";
 
-				[...document.querySelectorAll(".thing")].forEach((thing) => {
-					thing.style["margin"] = "2vh 1vw 2vh 1vw";
-					thing.onclick = loseFaster(thing, 17);
-					things.push(thing)
-				});
+        button.onclick = () => restartGame(timer);
+      };
 
-				timer = setTimeout(loop, loopTimer);
+      const restartGame = (timer) => {
+        clearTimeout(timer);
 
-			};
-		</script>
-	</head>
-	<body class="start">
-		<div style="display: flex; flex-direction: row; justify-content: space-around">
-			<h1 class="start">Click to win!</h1>
-			<div class="start-button">
-				<button id="start" type="button" onclick="setup();">Start</button>
-			</div>
-			<div>
-				<h2 style="font-family: monospace; font-size: 1.5vw">WASD keys to move</h2>
-				<h2 style="font-family: monospace; font-size: 1.5vw">Score: <span id="score">0</span></h2>
-			</div>
-		</div>
-		<div id="gamearea">
-			<div class="thing" id="thing1"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing2"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing3"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing4"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing5"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing6"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing7"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-			<div class="thing" id="thing8"><span class="u">🦄</span> <span class="m">Click me!</span> </div>
-		</div>
-	</body>
+        button.innerText = "Start";
+        button.onclick = start;
+
+        document.onmousemove = null;
+        document.onclick = null;
+        document.onkey;
+
+        things.forEach((thing, i) => {
+          thing.onclick = null;
+        });
+
+        down = null;
+
+        resetScore();
+
+        setup();
+      };
+
+      const loseFasterIfWasd = (e) => {
+        if (["w", "a", "s", "d"].includes(e.key)) {
+          things.forEach((o) => {
+            moveBy(o, 14);
+            updateScore(wobble(-14));
+          });
+        } else if (e.key == "Z") {
+          updateScore(500);
+        }
+      };
+
+      const setup = () => {
+        setState("start", "Click to win!");
+
+        if (things.length == 0) {
+          [...document.querySelectorAll(".thing")].forEach((thing) => {
+            things.push(thing);
+          });
+        }
+
+        things.forEach((thing) => {
+          thing.style["margin"] = "2vh 1vw 2vh 1vw";
+          thing.style["left-margin"] = "1vw";
+        });
+      };
+    </script>
+  </head>
+  <body onload="setup();" class="start">
+    <div
+      style="display: flex; flex-direction: row; justify-content: space-around"
+    >
+      <h1 class="start">Click to win!</h1>
+      <div class="start-button">
+        <button id="start" type="button" onclick="start();">Start</button>
+      </div>
+      <div>
+        <h2 style="font-family: monospace; font-size: 1.5vw">
+          WASD keys to move
+        </h2>
+        <h2 style="font-family: monospace; font-size: 1.5vw">
+          Score: <span id="score">0</span>
+        </h2>
+      </div>
+    </div>
+    <div id="gamearea">
+      <div class="thing" id="thing1">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing2">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing3">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing4">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing5">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing6">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing7">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+      <div class="thing" id="thing8">
+        <span class="u">🦄</span> <span class="m">Click me!</span>
+      </div>
+    </div>
+  </body>
 </html>
