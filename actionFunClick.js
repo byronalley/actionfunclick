@@ -98,7 +98,7 @@ const restartGame = (timer) => {
 
   document.onmousemove = null;
   document.onclick = null;
-  document.onkey;
+  document.onkeydown = null;
 
   things.forEach((thing, i) => {
     thing.onclick = null;
