@@ -75,8 +75,16 @@ const start = () => {
   });
   loop();
 };
-const win = () => setState("win", "you win.");
-const lose = () => setState("lose", "***YOU LOSE!!!***");
+
+const win = () => {
+  setState("win", "you win.");
+  clearEventHandlers();
+};
+
+const lose = () => {
+  setState("lose", "***YOU LOSE!!!***");
+  clearEventHandlers();
+};
 
 const setState = (className, message) => {
   document.querySelector("h1").innerHTML = message;
@@ -96,6 +104,14 @@ const restartGame = (timer) => {
   button.innerText = "Start";
   button.onclick = start;
 
+  clearEventHandlers();
+
+  resetScore();
+
+  setup();
+};
+
+const clearEventHandlers = () => {
   document.onmousemove = null;
   document.onclick = null;
   document.onkeydown = null;
@@ -103,12 +119,6 @@ const restartGame = (timer) => {
   things.forEach((thing, i) => {
     thing.onclick = null;
   });
-
-  down = null;
-
-  resetScore();
-
-  setup();
 };
 
 const loseFasterIfWasd = (e) => {
