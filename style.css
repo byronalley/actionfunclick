@@ -28,6 +28,7 @@ div.thing {
   height: 5vh;
   width: 15.5vw;
   transition: all 700ms ease-in-out;
+  position: relative;
 }
 
 div.thing span.m {
@@ -35,7 +36,6 @@ div.thing span.m {
   background-color: #dddddd;
   border-radius: 1vh;
   padding: 0.3vh;
-  position: relative;
   bottom: 2vh;
 }
 

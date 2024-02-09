@@ -52,18 +52,17 @@ const loop = () => {
 
 const hasLost = () => {
   return things
-    .map((t) => Number.parseInt(t.style["margin-left"]))
+    .map((t) => Number.parseInt(t.style.left))
     .some((n) => n >= loserLineVw);
 };
 
 const move = (thing) => moveBy(thing, wobble(moveRate));
 
 const moveBy = (thing, n) => {
-  Number.parseInt(thing.style["margin-left"]) + "vw";
-  const margin =
-    Math.max(0, n + Number.parseInt(thing.style["margin-left"])) + "vw";
+  Number.parseInt(thing.style.left) + "vw";
+  const left = Math.max(0, n + Number.parseInt(thing.style.left)) + "vw";
 
-  thing.style["margin-left"] = margin;
+  thing.style.left = left;
 };
 
 const start = () => {
@@ -134,6 +133,6 @@ const setup = () => {
 
   things.forEach((thing) => {
     thing.style["margin"] = "2vh 1vw 2vh 1vw";
-    thing.style["left-margin"] = "1vw";
+    thing.style.left = "1vw";
   });
 };
