@@ -78,6 +78,7 @@ body.lose .thing {
   width: 0;
   height: 0;
   margin: 0;
+  border-radius: 90%;
   transition: all 1300ms ease-in-out;
 }
 
